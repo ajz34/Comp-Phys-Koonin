@@ -1,0 +1,10 @@
+chap1b.for
+	
+	1.  Warning for the code:
+		    > IF (FAC .EQ. 2.) THEN
+		  for equivalence judging of two real numbers is dangerous.
+	
+	2.  Definition of the variable 
+				> SUM 
+			may be bad, in that one internal function is also defined by this 
+			name.
