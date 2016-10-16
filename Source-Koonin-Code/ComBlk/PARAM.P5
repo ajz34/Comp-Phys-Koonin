@@ -1,0 +1,19 @@
+C param.p5
+      INTEGER    MXNCHI              !maximum number of chi values
+      INTEGER    MAXN                !maximum number of particles
+      INTEGER    MAXDIM              !maximum dimension of matrices
+      PARAMETER  (MAXN=100)
+      PARAMETER  (MXNCHI=500)
+      PARAMETER  (MAXDIM=MAXN/2+1)
+C
+      INTEGER    NPART               !number of particles
+      REAL       CHI(MXNCHI),DELCHI  !coupling constant and increment
+      INTEGER    NCHI                !number of coupling constants
+      LOGICAL    VECTRS              !do we want eigenvectors?
+      REAL       LTOLE               !tolerance for eigenvalue search
+      REAL       EPS                 !factor to keep (E-H) nonsingular
+C
+      INTEGER JJ,JJ1                 !J value, J*(J+1) value 
+C
+      COMMON/PPARAM/NPART,CHI,NCHI,DELCHI,VECTRS,LTOLE,EPS
+      COMMON/PCALC/JJ,JJ1                                               

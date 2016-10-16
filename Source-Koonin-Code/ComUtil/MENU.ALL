@@ -1,0 +1,49 @@
+C  menu.all                                   
+C
+        INTEGER FLOAT,NUM,BOOLEN,YESKIP,NOSKIP,SKIP,QUIT
+        INTEGER TITLE,WAIT,CHSTR,MTITLE,MCHOIC,PPRINT,CLRTRM
+C
+        INTEGER IMAIN,STOP,ITTERM,ITFILE,ITNAME,IGTERM,IGHRD
+        INTEGER IGFILE,IGNAME,ISTOP
+C
+C       data arrays for menu
+        CHARACTER*60 MPRMPT            !prompt string
+        CHARACTER*60 MTAG              !terse description
+        INTEGER MTYPE                  !data type
+        INTEGER MINTS                  !default value for integer
+        REAL MREALS                    !default value for real
+        REAL MLOLIM                    !lower limit on input
+        REAL MHILIM                    !high limit on input
+        CHARACTER*40 MSTRNG            !default value for string
+C
+C       menu data types
+        PARAMETER (FLOAT  = 0)         !floating point number
+        PARAMETER (NUM    = 1)         !integer 
+        PARAMETER (BOOLEN = 2)         !yes or no user input
+        PARAMETER (YESKIP = 3)         !yes or no, skip on YES
+        PARAMETER (NOSKIP = 4)         !Yes or no, skip on NO
+        PARAMETER (SKIP   = 5)         !Unconditional GOTO
+        PARAMETER (QUIT   = 6)         !abort current ASK call
+        PARAMETER (TITLE  = 7)         !print prompt (in ASK or PRTAGS)
+        PARAMETER (WAIT   = 8)         !print prompt and invoke PAUSE
+        PARAMETER (CHSTR  = 9)         !character string
+        PARAMETER (MTITLE = 10)        !print MPRMPT() during ASK only
+        PARAMETER (MCHOIC = 11)        !print prompt, get choice, branch
+        PARAMETER (PPRINT = 12)        !print out parameters
+        PARAMETER (CLRTRM = 13)        !clear screen
+C
+C       menu entries which are the same for all programs
+        PARAMETER (IMAIN  = 10)        !main menu choice
+        PARAMETER (STOP   = -7)        !flag to stop
+        PARAMETER (ITTERM = 73 )       !text to terminal
+        PARAMETER (ITFILE = 74 )       !text to file
+        PARAMETER (ITNAME = 75 )       !text file name
+        PARAMETER (IGTERM = 83 )       !graphics to terminal
+        PARAMETER (IGHRD  = 84 )       !graphics hardcopy
+        PARAMETER (IGFILE = 85 )       !graphics to file
+        PARAMETER (IGNAME = 86 )       !graphics file name
+        PARAMETER (ISTOP  = 98 )       !last entry
+C
+        COMMON/MVARS/MTYPE(100),MINTS(100), 
+     1              MREALS(100),MLOLIM(100),MHILIM(100) 
+        COMMON/CMVARS/MPRMPT(100),MTAG(100),MSTRNG(10)

@@ -1,0 +1,23 @@
+C grfdat.all
+C
+       INTEGER NPOINT              !number of points to graph
+       INTEGER ILINE               !code for line type
+       INTEGER ISYM                !code for symbol type
+       INTEGER IFREQ               !symbol frequency    
+       INTEGER NPLOT               !total number of plots on page
+       INTEGER IPLOT               !number of current plot         
+       INTEGER NXTICK,NYTICK       !number of tick marks
+C
+       CHARACTER*60 LABEL(2)       !xaxis and yaxis labels
+       CHARACTER*60 TITLE          !title for graphics page
+       CHARACTER*60 INFO           !informational message
+C
+       REAL XMIN,XMAX              !limits on independent variable
+       REAL YMIN,YMAX              !limits on dependent variable
+       REAL X0VAL                  !y value along x axis
+       REAL Y0VAL                  !x value along y axis
+C
+       COMMON/GSTYLE/NPOINT,ILINE,ISYM,IFREQ,NPLOT,IPLOT,
+     +               NXTICK,NYTICK
+       COMMON/LABELS/TITLE,LABEL,INFO
+       COMMON/XYAXES/XMIN,XMAX,YMIN,YMAX,X0VAL,Y0VAL

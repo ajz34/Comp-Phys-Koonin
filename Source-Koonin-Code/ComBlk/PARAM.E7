@@ -1,0 +1,36 @@
+C param.e7
+C
+      REAL PI           !pi=3.15159.....
+      REAL VXMIN,VXMAX  !physical limits on lattice
+      COMPLEX SQRTM1    !square root of -1
+      REAL ASTEP,AGAUSS !factors in the potentials
+      INTEGER POT       !which potential
+      REAL X0           !center of potential
+      REAL A            !width of potential
+      REAL V0           !height of potential
+      INTEGER PACKET    !which wavepacket
+      REAL SIGMA        !packet width
+      REAL W0           !packet initial position
+      REAL K0           !packet wavenumber
+      REAL XMID         !division between left and right
+      INTEGER IMID      !index of division
+      REAL DX           !spatial step
+      INTEGER NPTS      !number of lattice points 
+      REAL VMAX,VMIN    !limits on value of potential
+      LOGICAL MOVIES    !when only graphics to screen is requested
+C
+      INTEGER MAXLAT    !maximum number of lattice points
+      PARAMETER (MAXLAT=1000)
+      REAL X(0:MAXLAT)  !array of X values
+      REAL V(0:MAXLAT)  !array of potential values
+      COMPLEX GAMMA(0:MAXLAT) !terms in matrix inversion
+C
+      INTEGER SQUARE,GAUSS,PARAB,STEP !types of potentials
+      INTEGER LORNTZ                  !types of packets
+      PARAMETER (SQUARE=1,GAUSS=2,PARAB=3,STEP=4,LORNTZ=1)
+C
+      COMMON / CONST / PI,VXMIN,VXMAX,SQRTM1,ASTEP,AGAUSS
+      COMMON / PPARAM / POT,X0,A,V0,PACKET,SIGMA,W0,XMID
+      COMMON / NPARAM / NPTS
+      COMMON / PCALC / DX,X,V,GAMMA,IMID,VMAX,VMIN,MOVIES,K0
+                                          

@@ -1,0 +1,38 @@
+C param.p7                
+C
+      REAL A,B               !A and B species concentrations
+      REAL XDIFF,YDIFF       !X and Y species diff constants
+      REAL XFLUCT,YFLUCT     !X and Y species init fluctuations
+      INTEGER NX,NY          !horiz and vert number of lattice points
+      REAL HX,HY             !horiz and vert steps
+      DOUBLE PRECISION DSEED !random number seed for init cond
+      INTEGER XCNTR,YCNTR    !data for centering display
+      LOGICAL XSKIP,YSKIP    !data for centering display
+      INTEGER NLEV           !number of contour levels
+      COMPLEX OMEGAM(2),OMEGAP(2)   !freq from linear pert theory
+      REAL MLO,MHI           !smallest, largest mode for this lattice
+      REAL XSCALE,YSCALE     !graphing scales
+C
+      REAL XXPLUS,XYPLUS,YXPLUS,YYPLUS  !useful constants; first letter
+      REAL XXZERO,XYZERO,YXZERO,YYZERO  !refers to species, second to
+      REAL ADT,BDT,BP1DT                !horiz or vert
+C
+      INTEGER MAXX,MAXY      !maximum horiz and vert dimensions
+      PARAMETER (MAXX=79)    !these are set assuming that you
+      PARAMETER (MAXY=20)    !have no graphics and the length of
+                             !your terminal=24
+C      
+      !following are the terms in the recursion (see Eq. 7.12-7.16)
+      REAL ALPHXX(0:MAXX),GAMXX(MAXX) !horiz recur of X
+      REAL ALPHYX(0:MAXX),GAMYX(MAXX) !horiz recur of Y
+      REAL ALPHXY(0:MAXY),GAMXY(MAXY) !vert recur of X
+      REAL ALPHYY(0:MAXY),GAMYY(MAXY) !vert recur of Y
+C
+      COMMON / PPARAM / A,B,XDIFF,YDIFF,XFLUCT,YFLUCT
+      COMMON / NPARAM / NX,NY,DSEED
+      COMMON / GPARAM / NLEV,XCNTR,YCNTR,XSKIP,YSKIP,XSCALE,YSCALE
+      COMMON / PCALC / HX,HY,ALPHXX,ALPHXY,ALPHYX,ALPHYY,
+     +  GAMXX,GAMXY,GAMYX,GAMYY,ADT,BDT,BP1DT,
+     +  XXPLUS,XYPLUS,YXPLUS,YYPLUS,XXZERO,XYZERO,YXZERO,YYZERO,
+     +  OMEGAP,OMEGAM,MHI,MLO
+                                                      

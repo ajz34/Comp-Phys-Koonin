@@ -1,0 +1,21 @@
+C param.p2
+C
+      REAL MEORMP                 !mass of electron over mass of proton
+      REAL YE                     !electron fraction
+      REAL RHO1                   !initial density
+      REAL RHO2                   !final density
+      INTEGER NMODEL              !number of models to calculate
+      REAL R0                     !scaling radius
+      REAL M0                     !scaling mass
+      REAL RHO0                   !scaling density
+      REAL E0                     !scaling energy
+      REAL RHOCUT                 !nearly zero density
+      INTEGER MAXSTP                !array size for density
+      INTEGER MAXMOD                !max number of models
+C
+      PARAMETER (MAXSTP=1000)
+      PARAMETER (MAXMOD=25)
+C
+      COMMON / CONST /MEORMP
+      COMMON / PPARAM / YE,RHO1,RHO2,NMODEL
+      COMMON / PCALC / R0,M0,RHO0,E0,RHOCUT

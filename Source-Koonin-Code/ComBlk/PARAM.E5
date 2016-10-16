@@ -1,0 +1,50 @@
+C param.p5
+C
+      REAL PI                          !3.14159
+      COMPLEX SQRTM1                   !square root of minus 1
+      REAL ALPHA                       !fine structure constant 
+      REAL HBARC                       !hbar times c (MeV-fermi)
+      INTEGER NLEG                     !number of points for GL integ
+      PARAMETER (NLEG=20)
+      REAL WLEG(NLEG),XLEG(NLEG)       !weights and abscissae
+C
+      INTEGER CA,NI,PB                 !flags for each nucleus
+      PARAMETER (CA=1)
+      PARAMETER (NI=2)
+      PARAMETER (PB=3)
+C
+      REAL RMAX                        !radius at which density =0
+      INTEGER NUCL                     !nucleus of choice
+      INTEGER NBASIS                   !number of sin waves to include
+C
+      INTEGER DATMAX                   !maximum number of data points
+      PARAMETER (DATMAX=100)
+      INTEGER NGRF                     !number of points for graphing
+      PARAMETER (NGRF=100)
+C
+      REAL THETA(DATMAX),SIGE(DATMAX),DSIGE(DATMAX)!experimental data
+      REAL QEFF(DATMAX) 
+      REAL ZTARGT,ATARGT               !charge, number of nucleons
+      INTEGER NPTS                     !number of data points
+      REAL EBEAM,KBEAM                 !beam energy and wavenumber
+      REAL ZA                          !charge * fine struct const
+      REAL QMAX                        !maximum momentum transfer
+      REAL RZERO                       !model radius for nucleus
+      CHARACTER*10 TARGET                  
+      REAL VC1                         !correction to momentum transfer
+      REAL DRGRF,RGRF(NGRF)            !radial values for graphing
+C                                     
+      INTEGER CMAX                     !maximum number of Cn's
+      PARAMETER (CMAX=15)                 
+      REAL CHIN(NLEG,CMAX)             !chi(n) array
+      REAL JTABLE(NLEG,DATMAX)         !Bessel functions * b
+      COMPLEX FOUTER(DATMAX)           !outer part of scatt amplitude
+C
+      COMMON/CONST/PI,ALPHA,HBARC,WLEG,XLEG,SQRTM1 
+      COMMON/PPARM/RMAX,NUCL,NBASIS
+      COMMON/PCALC/ZTARGT,ATARGT,NPTS,EBEAM,KBEAM,ZA,QMAX,RZERO,VC1
+      COMMON/NUCDAT/THETA,SIGE,DSIGE,QEFF
+      COMMON/TABLE/CHIN,JTABLE,FOUTER                                   
+      COMMON/GRF/DRGRF,RGRF
+      COMMON/CHARC/TARGET
+                                                                        

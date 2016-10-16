@@ -1,0 +1,32 @@
+C io.all
+C
+C     environment dependent parameters
+      INTEGER IUNIT      !unit number for input from screen
+      INTEGER OUNIT      !unit number for output to screen
+      INTEGER TUNIT      !unit number for text output to file
+      INTEGER GUNIT      !unit number for graphics output to file
+      INTEGER DUNIT      !unit number for data input from file
+      INTEGER TRMLIN     !number of lines on terminal screen
+      INTEGER TRMWID     !width of terminal screen
+C            
+C     the following are default answers to i/o choices
+C      1==yes   0 == no   
+      INTEGER TXTTRM     !send text output to terminal?
+      INTEGER TXTFIL     !send text output to a file?
+      INTEGER GRFTRM     !send graphics to terminal?
+      INTEGER GRFHRD     !send graphics to a hard copy device?
+      INTEGER GRFFIL     !send graphics data to a file?
+C       
+C     i/o input parameters for this run
+      LOGICAL TTERM           !write text output to terminal?
+      LOGICAL TFILE           !write text output to a file?
+      CHARACTER*12 TNAME      !name of text file
+      LOGICAL GTERM           !send graphics output to terminal?
+      LOGICAL GHRDCP          !send graphics output to hardcopy device?
+      LOGICAL GFILE           !send graphics data to a file?
+      CHARACTER*12 GNAME      !name of graphics data file
+C
+      COMMON /IO/TUNIT,GUNIT,IUNIT,OUNIT,DUNIT,TRMLIN,TRMWID,TXTTRM,
+     +             TXTFIL,GRFTRM,GRFHRD,GRFFIL,
+     +             TTERM,TFILE,GTERM,GFILE,GHRDCP
+      COMMON / CIO / TNAME,GNAME

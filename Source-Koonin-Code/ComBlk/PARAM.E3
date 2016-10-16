@@ -1,0 +1,39 @@
+C param.e3
+C
+      REAL GAMMA          !degree of 'quantumness'
+      REAL TOLF           !tolerance in search
+      INTEGER NPTS        !number of lattice points
+      INTEGER MAXSTP      !max number of steps in search
+C      
+      INTEGER MAXLAT       !maximum number of lattice points
+      PARAMETER (MAXLAT=1000)
+C
+      INTEGER SQUARE,PARAB,LENRD  !potential types
+      PARAMETER (SQUARE=1)
+      PARAMETER (PARAB=2)
+      PARAMETER (LENRD=3)
+C
+      INTEGER POT          !which potential
+      INTEGER BUMP,FLAT    !which features do we want
+      REAL LEFT,RIGHT,HEIGHT,PWID !potential characteristics
+      REAL V(MAXLAT)       !potential array
+      REAL X(MAXLAT)       !space coordinate 
+      REAL VMAX            !max value of potential
+      REAL EBOTTM,DEBOT    !guesses for g.s. energy and spacing
+C
+      REAL EMIN,EMAX,DEMIN,DEMAX  !limits on energy and energy increment
+C
+      REAL XMIN1,XMAX1,DX1 !limits on each potential
+      REAL XMIN2,XMAX2,DX2
+      REAL XMIN3,XMAX3,DX3
+      REAL VXMIN,VXMAX,DX
+C
+      INTEGER MAXLEV               !maximum number of levels
+      PARAMETER (MAXLEV=50)
+C
+      COMMON / PPARAM / GAMMA
+      COMMON / NPARAM / TOLF,NPTS,MAXSTP
+      COMMON / POTPRM / POT,BUMP,FLAT,LEFT,RIGHT,HEIGHT,PWID
+      COMMON / CONST  / XMIN1,XMAX1,XMIN2,XMAX2,XMIN3,XMAX3,
+     +                  EMIN,EMAX,DEMIN,DEMAX
+      COMMON / PCALC  / VXMIN,VXMAX,DX,DX1,DX2,DX3,V,VMAX,EBOTTM,DEBOT,X

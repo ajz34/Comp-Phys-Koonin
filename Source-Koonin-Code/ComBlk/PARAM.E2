@@ -1,0 +1,20 @@
+C param.e2
+C
+      REAL DY0,TOLY       !constants for search to find limits on y
+      REAL EINIT          !initial energy
+      REAL TSTEP          !time step value
+      INTEGER NSOS        !number of surface of section points
+      REAL CMIN,CMAX      !limits on Y coordinate for this value of E
+C      
+      LOGICAL TRAJCT      !are trajectories to be plotted
+      INTEGER TDEV        !where are trajectories to be plotted
+      INTEGER NTRJ        !points in traj to be plotted 
+C
+      INTEGER MAXSS       !maximum number of sos points
+      PARAMETER (MAXSS=10000)
+C
+      COMMON / CONST  / DY0,TOLY
+      COMMON / PPARAM / EINIT
+      COMMON / NPARAM / TSTEP,NSOS
+      COMMON / PCALC  / CMIN,CMAX
+      COMMON / TPLOT  / TDEV,TRAJCT,NTRJ

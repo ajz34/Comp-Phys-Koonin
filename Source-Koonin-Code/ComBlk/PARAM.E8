@@ -1,0 +1,25 @@
+C param.e8
+C
+      REAL B                 !magnetic field strength
+      REAL J                 !interaction strength
+      INTEGER NX,NY          !horiz and vert number of lattice points
+      DOUBLE PRECISION DSEED !random number seed  
+      INTEGER NTHERM         !number of thermalization sweeps
+      INTEGER NFREQ          !freq of sweeps to avoid correlations
+      INTEGER NSIZE          !size of groups
+      INTEGER NGROUP         !number of groups
+      INTEGER XCNTR,YCNTR    !data for centering display
+      LOGICAL XSKIP,YSKIP    !data for centering display
+      REAL RATIO(-4:4,-1:1)  !acceptance ratio matrix
+      INTEGER NSPIN          !total number of spins
+      LOGICAL TERSE          !terse output
+C      
+      INTEGER MAXX,MAXY      !maximum horiz and vert dimensions
+      PARAMETER (MAXX=79)    !these are set assuming that you
+      PARAMETER (MAXY=20)    !have no graphics and the length of
+                             !your terminal=24
+C      
+      COMMON / PPARAM / B,J
+      COMMON / NPARAM / NX,NY,DSEED,NTHERM,NFREQ,NSIZE,NGROUP
+      COMMON / GPARAM / XCNTR,YCNTR,XSKIP,YSKIP,TERSE
+      COMMON / PCALC / RATIO,NSPIN

@@ -1,0 +1,19 @@
+C param.p1
+C
+      REAL PI          ! pi=3.14159.........
+      REAL E           ! incident energy in units of Vzero
+      REAL BMIN        ! minimum impact parameter
+      REAL BMAX        ! maximum impact parameter
+      REAL RMAX        ! radius at which V<<E
+      REAL TOLR        ! tolerance for turning point search
+      INTEGER NB       ! number of steps in B
+      INTEGER NPTS     ! number of quadrature points
+      REAL DB          ! size of steps in B
+      INTEGER MAX      !max number of B values
+C
+      PARAMETER (MAX=100)
+C 
+      COMMON / CONST / PI
+      COMMON / PPARAM / E,BMIN,BMAX
+      COMMON / NPARAM / NB,RMAX,TOLR,NPTS
+      COMMON / PCALC / DB 

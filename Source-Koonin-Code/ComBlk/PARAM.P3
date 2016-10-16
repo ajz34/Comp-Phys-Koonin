@@ -1,0 +1,40 @@
+C param.p3
+C 
+      REAL MIX           !fraction of old density to mix in
+      INTEGER NSTATE     !total number of states in the calculation
+      REAL HBARM         !hbar**2/mass of an electron
+      REAL CHARGE        !square of the electron charge
+      REAL ABOHR         !Bohr radius
+      INTEGER FACTRL     !array of factorials
+      INTEGER ANGMOM     !angular momentum of each state
+      CHARACTER*5 ID     !state identification
+      REAL Z             !number of protons in nucleus
+      INTEGER NOCC       !occupation of each state
+      REAL DR            !radial step size
+      REAL RMAX          !outer radius of lattice
+      INTEGER NITER      !number of iterations
+      REAL ZCHARG        !nuclear charge 
+      INTEGER NR         !number of radial steps
+      INTEGER MAXSTT     !maximum number of states allowed
+      INTEGER IKEN,ICEN,IVEN,IVEE,IVEX   !index energy types
+      INTEGER IKTOT,IVTOT,ITOT !index energy totals
+      INTEGER MAXSTP     !maximum size of data arrays
+C 
+      PARAMETER (IKEN=1)
+      PARAMETER (ICEN=2)
+      PARAMETER (IVEN=3)
+      PARAMETER (IVEE=4)
+      PARAMETER (IVEX=5)
+      PARAMETER (IKTOT=6)
+      PARAMETER (IVTOT=7)
+      PARAMETER (ITOT=8)
+      PARAMETER (MAXSTT=3)
+      PARAMETER (MAXSTP=1000)      
+C
+      DIMENSION FACTRL(0:10),ANGMOM(MAXSTT),NOCC(MAXSTT+1),ID(MAXSTT+1)
+C
+      COMMON / CONST / MIX,NSTATE,HBARM,CHARGE,ABOHR,FACTRL,ANGMOM
+      COMMON / PPARAM / Z,NOCC
+      COMMON / NPARAM / DR,RMAX,NITER
+      COMMON / PCALC /  ZCHARG,NR
+      COMMON / NAMES /  ID

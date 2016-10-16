@@ -1,0 +1,680 @@
+C file GRAPHIT.LO
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE LNLNAX 
+C draws linear xy axes 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'GRFDAT.ALL'
+       LOGICAL YLOG,XLOG               !flags to signal log plotting
+       REAL X0,X1,X2                   !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                   !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+       COMMON/LOGFLG/YLOG,XLOG
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C These temporary values are essential for log plotting, but also must
+C be set for linear plotting
+       YLOG=.FALSE.
+       XLOG=.FALSE.
+       X1=XMIN
+       X2=XMAX
+       Y0=Y0VAL
+       Y1=YMIN
+       Y2=YMAX
+       X0=X0VAL                                                        
+C
+       CALL SUBPLT                     !define subplot area
+       CALL XAXIS                      !draw and label x axis
+       CALL YAXIS                      !drawn and label y axis
+       CALL LEGEND                     !write out information
+C
+       RETURN
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE LGLNAX 
+C draws log-linear xy axes
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'GRFDAT.ALL'
+       LOGICAL YLOG,XLOG               !flags to signal log plotting
+       REAL X0,X1,X2                   !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                   !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+       COMMON/LOGFLG/YLOG,XLOG
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       YLOG=.TRUE.                     !convert to log plotting
+       XLOG=.FALSE.
+C
+C      convert to log values if necessary, without changing global vars
+       X1=XMIN
+       X2=XMAX
+       Y0=Y0VAL                                                
+       Y1=ALOG10(YMIN)
+       Y2=ALOG10(YMAX)
+       X0=ALOG10(X0VAL)
+C       
+       CALL SUBPLT                     !define subplot area
+       CALL XAXIS                      !draw and label x axis
+       CALL YAXIS                      !draw and label y axis
+       CALL LEGEND                     !write out information
+C
+       RETURN
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE LGLGAX 
+C draws log-log xy axes
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'GRFDAT.ALL'
+       LOGICAL YLOG,XLOG               !flags to signal log plotting
+       REAL X0,X1,X2                   !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                   !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+       COMMON/LOGFLG/YLOG,XLOG
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      convert to log plotting
+       YLOG=.TRUE.
+       XLOG=.TRUE.
+C
+C      convert to log values if necessary, without changing global vars
+       X1=ALOG10(XMIN)
+       X2=ALOG10(XMAX)
+       Y0=ALOG10(Y0VAL)
+       Y1=ALOG10(YMIN)
+       Y2=ALOG10(YMAX)
+       X0=ALOG10(X0VAL)
+C       
+       CALL SUBPLT                      !define subplot area
+       CALL XAXIS                       !draw and label x axis
+       CALL YAXIS                       !drawn and label y axis
+       CALL LEGEND                      !write out information
+C
+       RETURN
+       END  
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE LEGEND
+C write information at the bottom left of the plot
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'UISGRF.ALL'
+       INCLUDE 'GRFDAT.ALL'                                    
+       REAL X0,X1,X2                 !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                 !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+C Local variables:
+       REAL XTXT,YTXT                !location of text
+       REAL SMALL                    !small increments along either axis
+       INTEGER LEN                   !length of text                      
+C Function:
+       INTEGER LENTRU                !returns length of text
+       DATA SMALL/.01/
+       DATA INFO/' '/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       LEN=LENTRU(INFO)
+       IF (LEN .GT. 0) THEN
+         YTXT=Y1-5*SMALL*YLNGTH
+         XTXT=X1+4*SMALL*XLNGTH
+         CALL UIS$TEXT(TRID(IPLOT),1,INFO(1:LEN),XTXT,YTXT)
+       END IF
+       RETURN 
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE XYPLOT(X,Y)
+C plots x,y data
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'UISGRF.ALL'                                               
+       INCLUDE 'GRFDAT.ALL'
+       LOGICAL YLOG,XLOG               !flags to signal log plotting
+       COMMON/LOGFLG/YLOG,XLOG
+C Passed variables:                                                 
+       REAL X(NPOINT),Y(NPOINT)        !data arrays
+C Local variables:                                 
+       INTEGER I                       !x and y indices
+       REAL X1,X2,Y1,Y2                !points to be plotted
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      set line type (type 5 is no line at all)
+       IF (ILINE .EQ. 1) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FFFFFFFF'X)
+       IF (ILINE .EQ. 2) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FF00FF00'X)
+       IF (ILINE .EQ. 3) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FFF0FFF0'X)
+       IF (ILINE .EQ. 4) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'F000F000'X)
+C
+C      draw xy plot
+       X1=X(1)
+       Y1=Y(1)
+C      convert data for log plots
+       IF (XLOG) X1=ALOG10(X1)
+       IF (YLOG) Y1=ALOG10(Y1)
+       DO 100 I=1,NPOINT-1
+          X2=X(I+1)
+          Y2=Y(I+1)
+          IF (XLOG) X2=ALOG10(X2)
+          IF (YLOG) Y2=ALOG10(Y2)
+          IF (IFREQ .NE. 0) THEN
+C            plot symbols at ifreq frequency
+             IF (MOD(I,IFREQ) .EQ. 0) CALL GSYM(X1,Y1)
+          END IF
+          IF (ILINE .NE. 5) CALL UIS$PLOT(TRID(IPLOT),2,X1,Y1,X2,Y2)
+          X1=X2              !roll values
+          Y1=Y2
+100    CONTINUE
+C             
+C      plot symbol at the last point
+       IF (IFREQ .NE. 0) THEN
+          IF (MOD(I,IFREQ) .EQ. 0) CALL GSYM(X1,Y1)
+       END IF
+C
+       RETURN
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE CONTOR(Z,MX,MY,ZMIN,ZMAX,NCONT)
+C draws positive contours solid and negative contours dots
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'IO.ALL'
+       INCLUDE 'GRFDAT.ALL'                          
+C Passed variables:
+       INTEGER MX,MY           !dimensions of Z
+       REAL Z(MX,MY)           !data
+       REAL ZMIN,ZMAX          !limits on data
+       INTEGER NCONT           !number of contour lines
+C Local variables:
+       REAL DELZ               !Z interval  
+       REAL ZERO               !ZMIN 
+       INTEGER NNEG            !number of negative contours
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C     all Z values are positive
+      IF ((ZMAX .GT. 0.)  .AND. (ZMIN .GE. 0)) THEN
+        ILINE=1
+        CALL CONT2(Z,MX,MY,ZMIN,ZMAX,NCONT)
+C
+C     Z values are both positive and negative
+      ELSE IF ((ZMAX .GT. 0.) .AND. (ZMIN .LT. 0.)) THEN
+        DELZ=(ZMAX-ZMIN)/(NCONT+1)    
+        NNEG=INT(-ZMIN/DELZ)
+        ZERO=ZMIN+DELZ*(NNEG)       !min value for positive cont
+        ILINE=1
+        CALL CONT2(Z,MX,MY,ZERO,ZMAX,NCONT-NNEG)
+        ILINE=4
+        ZERO=ZMIN+DELZ*(NNEG+1)     !max value for neg cont
+        CALL CONT2(Z,MX,MY,ZMIN,ZERO,NNEG)
+C
+C     Z values are all negative
+      ELSE IF ((ZMAX .LE. 0.)  .AND. (ZMIN .LT. 0)) THEN
+        ILINE=4
+        CALL CONT2(Z,MX,MY,ZMIN,ZMAX,NCONT)
+      END IF
+C
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE CONT2(Z,MX,MY,ZMIN,ZMAX,NCONT)
+C drawn NCONT contours between ZMIN and ZMAX
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'IO.ALL'
+       INCLUDE 'UISGRF.ALL'
+       INCLUDE 'GRFDAT.ALL'                          
+C Passed variables:
+       INTEGER MX,MY           !dimensions of Z
+       REAL Z(MX,MY)           !data
+       REAL ZMIN,ZMAX          !limits on data
+       INTEGER NCONT           !number of contour lines
+C Local variables:
+       REAL DELX,DELY,DELZ     !X,Y and Z intervals
+       INTEGER IX,IY           !X and Y indices
+       REAL ZLL,ZUR,ZUL,ZLR    !Z values on corners of a square
+       REAL LL,UR,UL,LR        !differences: ZLVEV-ZLL, etc.
+       REAL X,Y                !X,Y values
+       REAL ZLEV               !value of Z on this contour
+       INTEGER ICONT           !index of contour
+       INTEGER NCUT            !number of cuts of ZLEV on square 
+       REAL XX(4),YY(4)        !location of cuts on square
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      draw box
+       CALL UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FFFFFFFF'X)
+       CALL UIS$PLOT(TRID(IPLOT),2,XMIN,YMAX,XMAX,YMAX)
+       CALL UIS$PLOT(TRID(IPLOT),2,XMAX,YMAX,XMAX,YMIN)
+C      set line type 
+       IF (ILINE .EQ. 1) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FFFFFFFF'X)
+       IF (ILINE .EQ. 2) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FF00FF00'X)
+       IF (ILINE .EQ. 3) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'FFF0FFF0'X)
+       IF (ILINE .EQ. 4) CALL 
+     +     UIS$SET_LINE_STYLE(TRID(IPLOT),0,2,'F0F0F0F0'X)
+C       
+       DELX=(XMAX-XMIN)/(MX-1)       !step sizes
+       DELY=(YMAX-YMIN)/(MY-1)
+       DELZ=(ZMAX-ZMIN)/(NCONT+1)   
+C
+       DO 100 IX=1,MX-1              !loop over X values
+          X=XMIN+DELX*IX
+          DO 200 IY=1,MY-1           !loop over Y values
+             Y=YMIN+DELY*IY
+C             
+             ZLL=Z(IX,IY)            !value of Z on lower left
+             ZUL=Z(IX,IY+1)          !value of Z on upper left
+             ZUR=Z(IX+1,IY+1)        !on upper right
+             ZLR=Z(IX+1,IY)          !on lower right
+C
+             DO 300 ICONT=1,NCONT    !loop over contour levels
+                ZLEV=ZMIN+DELZ*(ICONT) !level value
+                LL=ZLEV-ZLL            !differences between 
+                UL=ZLEV-ZUL            !corner values and ZLEV
+                UR=ZLEV-ZUR
+                LR=ZLEV-ZLR
+C
+C  For each of the four sides, determine if the contour line cuts
+C  that side; if so find the location of the cut by linear interpolation.
+C  Note that the contour line can cut only 0, 2, or 4 of the 4 sides
+                NCUT=0
+                IF (LL*UL .LE. 0) THEN
+                    NCUT=NCUT+1
+                    XX(NCUT)=X-DELX
+                    YY(NCUT)=Y-DELY*UL/(UL-LL)
+                END IF
+                IF (UL*UR .LE. 0) THEN
+                    NCUT=NCUT+1
+                    XX(NCUT)=X-DELX*UR/(UR-UL)
+                    YY(NCUT)=Y
+                END IF
+                IF (UR*LR .LE. 0) THEN
+                    NCUT=NCUT+1
+                    XX(NCUT)=X
+                    YY(NCUT)=Y-DELY*UR/(UR-LR)
+                END IF
+                IF (LR*LL .LE. 0) THEN
+                    NCUT=NCUT+1
+                    XX(NCUT)=X-DELX*LR/(LR-LL)
+                    YY(NCUT)=Y-DELY
+                END IF
+C
+                IF (NCUT .EQ. 0) THEN
+                    CONTINUE                 !do nothing
+                ELSE IF (NCUT .EQ. 2) THEN
+                    !connect the cut
+                    CALL UIS$PLOT(TRID(IPLOT),2,XX(1),YY(1),XX(2),YY(2))
+                ELSE IF (NCUT .EQ. 4) THEN
+                    !connect cuts; there is arbitrariness here
+                    CALL UIS$PLOT(TRID(IPLOT),2,XX(1),YY(1),XX(2),YY(2))
+                    CALL UIS$PLOT(TRID(IPLOT),2,XX(3),YY(3),XX(4),YY(4))
+                END IF
+300          CONTINUE  !end loop over contours
+200      CONTINUE      !end loop over Y
+100   CONTINUE         !end loop over Z
+C
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE GPAGE(DEVICE)
+C close graphics packages
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'IO.ALL'
+       INCLUDE 'UISGRF.ALL'
+       INCLUDE 'GRFDAT.ALL'                          
+       REAL X0,X1,X2                 !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                 !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2               
+C Passed variables:                                                    
+       INTEGER DEVICE                !which device is it?
+C Local variables:                                      
+       REAL XTXT,YTXT                !location of text
+       REAL SMALL                    !small increments along either axis
+       CHARACTER*1 DUMMY             !dummy input
+       INTEGER I                     !plot index
+       INTEGER SCREEN                !send to terminal
+       INTEGER PAPER                 !make a hardcopy
+       INTEGER FILE                  !send to a file
+       CHARACTER*8 CTIME             !time as character data
+       CHARACTER*12 FNAME            !file name
+       DATA SMALL/.01/
+       DATA SCREEN,PAPER,FILE/1,2,3/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       IF (DEVICE .EQ. SCREEN) THEN
+C      allow for inspection of graph before deleting
+C      type informational message in lower right        
+         YTXT=Y1-5*SMALL*YLNGTH
+         XTXT=X1+2*XLNGTH/3
+         CALL UIS$TEXT(TRID(IPLOT),1,'Press return to continue',
+     +                 XTXT,YTXT) 
+         READ (IUNIT,20) DUMMY
+20       FORMAT (A1)   
+C       
+       ELSE IF (DEVICE .EQ. PAPER) THEN
+C        get file name, of the form CPtime.UIS, where time=hhmmss
+C        this convention allows many plots, each with a unique name
+         CALL TIME(CTIME)
+         FNAME='CP'//CTIME(1:2)//CTIME(4:5)//CTIME(7:8)//'.UIS'
+C        write data to file, disable display list
+         CALL HCUIS$WRITE_DISPLAY(VDID,FNAME)
+         CALL UIS$DISABLE_DISPLAY_LIST(VDID)
+       END IF
+C
+C      delete the display
+       CALL UIS$DELETE_DISPLAY(VDID)
+C
+       RETURN
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE GTDEV(DEVICE)
+C sets device for graphics output to DEVICE;
+C for this graphics package, this work is actually done in SUBPLOT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'IO.ALL'
+C passed variables:
+       INTEGER DEVICE   !graphics to be sent to term or hard copy device
+C local variables:
+       INTEGER DEV            !DEVICE in disguise
+       COMMON / DEVINFO/ DEV  !pass variable to SUBPLT
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       DEV=DEVICE
+       RETURN
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C The following routines are not called directly by the physics programs
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE SUBPLT 
+C defines subplotting area
+C does all jobs which depend on the size of the plot
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C The choice of subplt size and placement is dependent on the
+C device and graphics package; those given here are for an 30 x 20 cm
+C screen using UIS routines
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'GRFDAT.ALL'
+       INCLUDE 'UISGRF.ALL'                                            
+       LOGICAL YLOG,XLOG             !flags to signal log plotting
+       REAL X0,X1,X2                 !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                 !temp values for y0val,ymin,ymax
+       INTEGER DEV     !graphics to be sent to term or hard copy device
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+       COMMON/LOGFLG/YLOG,XLOG
+       COMMON / DEVINFO / DEV        !passed from GETDEV
+C local variables:              
+       INTEGER LENTTL,LENTRU         !string lengths without blanks
+       REAL DSXMIN,DSXMAX            !total x display size in user units
+       REAL DSYMIN,DSYMAX            !total y display size in user units
+       REAL XSMAL,YSMAL              !percentage of window in margin
+       REAL XMARG,YMARG              !length of margin
+       REAL WIDTH,HEIGHT             !character size
+       INTEGER SCREEN                !send to terminal
+       INTEGER PAPER                 !make a hardcopy
+       INTEGER FILE                  !send to a file
+       CHARACTER*60 FONTID           !type of font
+       REAL WID_TO_LEN               !width to length ratio for title
+       REAL XTXT                     !x location of title in centimeters
+       INTEGER FIRST,YES,NO          !first time through?
+       DATA SCREEN,PAPER,FILE/1,2,3/
+       DATA FIRST,YES,NO/1,1,2/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC   
+C      length of axes
+       XLNGTH=(X2-X1)                                  
+       YLNGTH=(Y2-Y1)
+C      a reasonable margin
+       IF ((NPLOT .EQ. 3) .OR. (NPLOT .EQ. 4)) THEN
+           XSMAL=.11
+           YSMAL=.11
+       ELSE
+           XSMAL=.08
+           YSMAL=.08
+       END IF
+       XMARG=XSMAL*XLNGTH
+       YMARG=YSMAL*YLNGTH
+C      limits of virtual display in user coordinates
+       DSXMIN=X1-XMARG
+       DSXMAX=X2+XMARG
+       DSYMIN=Y1-YMARG
+       DSYMAX=Y2+2*YMARG 
+C
+C      set size of window in centimeters 
+       XSIZE=30.
+       YSIZE=25.
+C       
+C      make corrections to some of the above specifications, 
+C      as a function of NPLOT and IPLOT
+       IF (NPLOT .EQ. 1) THEN
+           XSIZE=22.           !make this window a little smaller
+           YSIZE=27.
+       ELSE IF (NPLOT .EQ. 2) THEN
+           IF (IPLOT .EQ. 1) DSXMAX=X2+3*XMARG+XLNGTH
+           IF (IPLOT .EQ. 2) DSXMIN=X1-3*XMARG-XLNGTH
+       ELSE IF (NPLOT .EQ. 3) THEN
+           IF (IPLOT .EQ. 1) DSYMIN=Y1-5*YMARG-2*YLNGTH
+           IF (IPLOT .EQ. 2) THEN
+               DSYMIN=Y1-3*YMARG-YLNGTH
+               DSYMAX=Y2+4*YMARG+YLNGTH
+           END IF
+           IF (IPLOT .EQ. 3)  DSYMAX=Y2+6*YMARG+2*YLNGTH
+       ELSE IF (NPLOT .EQ. 4)THEN
+           IF (IPLOT .EQ. 1) THEN
+               DSXMAX=X2+3*XMARG+XLNGTH
+               DSYMIN=Y1-3*YMARG-YLNGTH
+           ELSE IF (IPLOT .EQ. 2) THEN
+               DSXMIN=X1-3*XMARG-XLNGTH
+               DSYMIN=Y1-3*YMARG-YLNGTH
+           ELSE IF (IPLOT .EQ. 3) THEN
+               DSXMAX=X2+3*XMARG+XLNGTH
+               DSYMAX=Y2+4*YMARG+YLNGTH
+           ELSE IF (IPLOT .EQ. 4) THEN
+               DSXMIN=X1-3*XMARG-XLNGTH
+               DSYMAX=Y2+4*YMARG+YLNGTH
+           END IF
+       END IF
+C       
+       IF (IPLOT .EQ. 1) THEN
+C        create a virtual display 
+         VDID=UIS$CREATE_DISPLAY(DSXMIN,DSYMIN,DSXMAX,DSYMAX,
+     +               XSIZE,YSIZE)
+C
+C        choose a device
+         IF (DEV .EQ. SCREEN) THEN     
+           WDID=UIS$CREATE_WINDOW(VDID, 
+     +          'SYS$WORKSTATION','Computational Physics')
+           CALL UIS$DISABLE_DISPLAY_LIST(VDID)
+         ELSE IF (DEV .EQ. PAPER) THEN
+           CALL UIS$ENABLE_DISPLAY_LIST(VDID)
+         END IF
+C       
+C        set character size according to window size
+         IF (NPLOT .EQ. 3) THEN              
+           HEIGHT=.05*YLNGTH
+           CALL UIS$SET_CHAR_SIZE(VDID,0,1,,,HEIGHT)
+         ELSE IF (NPLOT .EQ. 4) THEN
+           WIDTH=.017*XLNGTH
+           CALL UIS$SET_CHAR_SIZE(VDID,0,1,,WIDTH)
+         ELSE IF (NPLOT .EQ. 2) THEN
+           WIDTH=.015*XLNGTH
+           CALL UIS$SET_CHAR_SIZE(VDID,0,1,,WIDTH)
+         ELSE
+           CALL UIS$SET_CHAR_SIZE(VDID,0,1)
+         END IF                                       
+C        allow for text which is rotated 90 degrees
+         CALL UIS$SET_TEXT_SLOPE(VDID,1,3,90.0)
+C
+C        write out title
+C        x scale is centimeters; yscale is user coordinates
+         TRID(0)=UIS$CREATE_TRANSFORMATION(VDID,0.,DSYMIN,
+     +            XSIZE,DSYMAX)
+C        get information to center the title
+         LENTTL=LENTRU(TITLE)
+         IF (FIRST .EQ. YES) THEN
+            CALL UIS$GET_FONT(VDID,0,FONTID)
+            CALL UIS$GET_FONT_SIZE(FONTID,TITLE(1:LENTTL),WIDTH,HEIGHT)
+            WID_TO_LEN=WIDTH/REAL(LENTTL) !save width/length for other calls
+            FIRST=NO
+         END IF
+         WIDTH=LENTTL*WID_TO_LEN
+         XTXT=(XSIZE-WIDTH)/2        !width, height are in centimeters
+C        write out title
+         CALL UIS$TEXT(TRID(0),0,TITLE(1:LENTTL),XTXT,Y2+1.6*YMARG)
+C
+      END IF         
+
+C     create the transformation for each plot
+      TRID(IPLOT)=UIS$CREATE_TRANSFORMATION(VDID,DSXMIN,DSYMIN,
+     +            DSXMAX,DSYMAX)
+C        
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE XAXIS  
+C draws and labels x (horizontal) axis
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'UISGRF.ALL'                                            
+       INCLUDE 'GRFDAT.ALL'
+       LOGICAL YLOG,XLOG             !flags to signal log plotting
+       REAL X0,X1,X2                 !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                 !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+       COMMON/LOGFLG/YLOG,XLOG
+C Local variables:   
+       REAL XTXT,YTXT                !location of text
+       INTEGER LENX,LENSTR,LENTRU    !string lengths without blanks
+       REAL TCKMIN,TCKMAX            !y values at ends of tick marks
+       REAL XTICK                    !x value at tick mark
+       CHARACTER*9 STRING            !string value of xtick
+       REAL SMALL                    !small increments along either axis
+       INTEGER I                     !indexes tick marks
+       DATA SMALL/.01/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      draw x axis
+       CALL UIS$PLOT(TRID(IPLOT),0,X1,X0,X2,X0) 
+C
+C      label x axis
+       LENX=LENTRU(LABEL(1))
+       XTXT=X2+5*SMALL*XLNGTH       
+       YTXT=X0+5*SMALL*YLNGTH
+       CALL UIS$TEXT(TRID(IPLOT),3,LABEL(1)(1:LENX),XTXT,YTXT) 
+C
+C      tick marks                       
+C      set length of ticks
+       TCKMIN=X0-SMALL*YLNGTH
+       TCKMAX=X0           
+C
+       DO 10 I=0,NXTICK
+C         draw tick marks
+          XTICK=X1+I*XLNGTH/NXTICK   
+          CALL UIS$PLOT(TRID(IPLOT),0,XTICK,TCKMIN,XTICK,TCKMAX)
+C
+C         label tick marks
+          XTXT=XTICK
+          IF (XLOG) XTICK=10**XTICK  
+          CALL CONVRT(XTICK,STRING,LENSTR)
+          CALL UIS$TEXT(TRID(IPLOT),1,STRING(1:LENSTR),XTXT,TCKMIN)
+10     CONTINUE
+C
+       RETURN
+       END               
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE YAXIS
+C draws and labels y (vertical) axis
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables:
+       INCLUDE 'UISGRF.ALL'
+       INCLUDE 'GRFDAT.ALL'
+       LOGICAL YLOG,XLOG             !flags to signal log plotting
+       REAL X0,X1,X2                 !temp values for x0val,xmin,xmax
+       REAL Y0,Y1,Y2                 !temp values for y0val,ymin,ymax
+       COMMON/LOGLMT/X0,X1,X2,Y0,Y1,Y2                
+       COMMON/LOGFLG/YLOG,XLOG
+C Local variables:                                                     
+       REAL XTXT,YTXT                !location of text
+       INTEGER LENY,LENTRU,LENSTR    !string lengths without blanks
+       REAL TCKMIN,TCKMAX            !x values at ends of tick marks
+       REAL YTICK                    !y value at tick mark
+       CHARACTER*9 STRING            !string value of xtick
+       REAL SMALL                    !small increments along either axis
+       INTEGER I                     !indexes tick marks
+       DATA SMALL/.01/
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      draw y axis
+       CALL UIS$PLOT(TRID(IPLOT),0,Y0,Y1,Y0,Y2) 
+C
+C      label y axis                                   
+       LENY=LENTRU(LABEL(2))
+       YTXT=Y2+5*SMALL*YLNGTH
+       XTXT=Y0+4*SMALL*XLNGTH
+       CALL UIS$TEXT(TRID(IPLOT),1,LABEL(2)(1:LENY),XTXT,YTXT)
+C
+C      tick marks
+C      set tick length
+       TCKMIN=Y0-SMALL*XLNGTH 
+       TCKMAX=Y0       
+C
+       DO 20 I=0,NYTICK
+C         draw marks
+          YTICK=Y1+I*YLNGTH/NYTICK
+          CALL UIS$PLOT(TRID(IPLOT),0,TCKMIN,YTICK,TCKMAX,YTICK)
+C
+C         label marks
+          YTXT=YTICK-.02*YLNGTH
+          IF (YLOG) YTICK=10**YTICK
+          CALL CONVRT(YTICK,STRING,LENSTR)
+          XTXT=Y0-.04*XLNGTH
+          CALL UIS$TEXT(TRID(IPLOT),3,STRING(1:LENSTR),XTXT,YTXT)
+20     CONTINUE
+
+       RETURN
+       END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       SUBROUTINE GSYM(XCNTR,YCNTR)                      
+C draws a symbol at XCNTR,YCNTR
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C Global variables
+       INCLUDE 'UISGRF.ALL'
+       INCLUDE 'GRFDAT.ALL'
+C Passed variables:
+       REAL XCNTR,YCNTR             !x,y coordinates of symbol center
+C Local variables:                                                    
+       REAL XSYM,YSYM               !symbol sizes in world coordinates
+       REAL X1,X2,Y1,Y2             !edges of square, cross and triangle
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
+C      set symbol size                                                 
+       XSYM=.005*XLNGTH
+       YSYM=.005*YLNGTH
+C
+C      circle            
+       IF (ISYM .EQ. 1) THEN
+           CALL UIS$CIRCLE(TRID(IPLOT),0,XCNTR,YCNTR,XSYM)
+C
+C      triangle
+       ELSE IF (ISYM .EQ. 2) THEN
+          X1=XCNTR-XSYM
+          X2=XCNTR+XSYM
+          Y1=YCNTR-YSYM
+          Y2=YCNTR+YSYM
+          CALL UIS$PLOT(TRID(IPLOT),0,X1,Y1,X2,Y1,XCNTR,Y2,X1,Y1)
+C
+C      square
+       ELSE IF (ISYM .EQ. 3) THEN
+          X1=XCNTR-XSYM
+          X2=XCNTR+XSYM
+          Y1=YCNTR-YSYM                                             
+          Y2=YCNTR+YSYM
+          CALL UIS$PLOT(TRID(IPLOT),0,X1,Y1,X2,Y1,X2,Y2,X1,Y2,X1,Y1)
+C
+C      cross      
+       ELSE IF (ISYM .EQ. 4) THEN
+          X1=XCNTR-XSYM
+          X2=XCNTR+XSYM
+          Y1=YCNTR-YSYM
+          Y2=YCNTR+YSYM
+          CALL UIS$PLOT(TRID(IPLOT),0,X1,Y1,X2,Y2) 
+          CALL UIS$PLOT(TRID(IPLOT),0,X1,Y2,X2,Y1) 
+C              
+C      point
+       ELSE IF (ISYM .EQ. 5) THEN
+           CALL UIS$CIRCLE(TRID(IPLOT),0,XCNTR,YCNTR,XSYM/2.)
+       END IF
+C
+       RETURN
+       END

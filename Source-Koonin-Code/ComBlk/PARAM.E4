@@ -1,0 +1,27 @@
+C param.e4
+      INTEGER Z                      !charge of nucleus
+      REAL E                         !energy of particle
+      REAL VZERO                     !depth of potential
+      INTEGER NLEG                   !number of quadrature points
+      INTEGER POT                    !which potential
+      INTEGER LENZ,SQUARE,GAUSS      !types of potentials
+C     
+      PARAMETER (LENZ=1)
+      PARAMETER (SQUARE=2)
+      PARAMETER (GAUSS=3)
+C
+      REAL E2                        !square of charge on electron
+      REAL HBARM                     !Planck's constant
+      REAL RMAX                      !maximum radius of potential
+      REAL SQHALF,PI                 !constants
+C
+      REAL K                         !wave number
+      REAL Z6                        !sixth root of Z
+      REAL R1S                       !radius of 1s shell
+      REAL RCUT                      !spatial extent of potential
+      REAL WLEG,XLEG                 !Gauss-Legendre weights and abscissae
+C 
+      COMMON/PPARAM/Z,E,VZERO,NLEG 
+      COMMON/NPARAM/POT
+      COMMON/CONSTS/E2,HBARM,RMAX,SQHALF,PI
+      COMMON/PCALC/Z6,K,RCUT,WLEG(48),XLEG(48),R1S

@@ -1,0 +1,44 @@
+C param.e6                  
+C
+      INTEGER NXMAX,NYMAX             !maximum lattice size
+      PARAMETER (NXMAX=79,NYMAX=79)         
+      REAL FMIN,FMAX                  !maximum values of the field
+      PARAMETER (FMIN=0.,FMAX=25.)
+      INTEGER BCMAX                   !maximum number of bound cond
+      PARAMETER (BCMAX=10)
+      INTEGER RECTGL,DIAGNL           !shapes of bound cond
+      PARAMETER (RECTGL=1,DIAGNL=2)
+      INTEGER DRCHLT,NON            !type of bound cond
+      PARAMETER (DRCHLT=1,NON=0)
+      INTEGER MAXLEV                  !maximum number of contour levels
+      PARAMETER (MAXLEV=20)
+C
+      LOGICAL FIRST                   !first time through menu?
+      INTEGER NX,NY                   !lattice size
+      REAL UPPER,LOWER,LEFT,RIGHT     !field values on lattice edge
+      REAL OMEGA                      !relaxation parameter
+      INTEGER PTYPE                   !choice for initial field
+      CHARACTER*12 PFILE              !file to input init data 
+      REAL PINIT                      !initial guess
+      LOGICAL SUBLAT                  !relax sublattice first?
+      INTEGER NXLL,NYLL,NXUR,NYUR     !sublattice parameters
+C                                    
+      INTEGER NFREQ                   !frequency of display
+      INTEGER NLEV                    !number of contour levels
+C
+      INTEGER NBC                     !number of bound cond
+      INTEGER XLL(BCMAX),YLL(BCMAX),XUR(BCMAX),YUR(BCMAX)
+                                      !coordinates for bound cond
+      INTEGER BCGEOM(BCMAX)           !geometry of bound cond
+      REAL BCVAL(BCMAX)               !value of bound cond
+      INTEGER BNDCND(NXMAX,NYMAX)     !flag to indicate bound cond
+C
+      LOGICAL XSKIP,YSKIP             !skip spaces or lines in display
+      INTEGER XCNTR,YCNTR             !how to center display
+C
+      COMMON / FLAG   / FIRST
+      COMMON / PPARAM / NX,NY,UPPER,LOWER,LEFT,RIGHT
+      COMMON / NPARAM / OMEGA,PINIT,SUBLAT,NXLL,NYLL,NXUR,NYUR,PTYPE
+      COMMON / BCPRM / NBC,XLL,YLL,XUR,YUR,BCGEOM,BCVAL,BNDCND
+      COMMON / GPARAM / NLEV,NFREQ,XSKIP,YSKIP,XCNTR,YCNTR 
+      COMMON / ASCII / PFILE

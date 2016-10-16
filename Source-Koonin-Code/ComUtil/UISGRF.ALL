@@ -1,0 +1,12 @@
+C uisgrf.all  (for GRAPHIT.LO only)
+       INCLUDE 'SYS$LIBRARY:UISENTRY'    !these are part of VWS
+       INCLUDE 'SYS$LIBRARY:UISUSRDEF'   !and only available on a VAX
+       INTEGER MAXPLT              !maximum number of graphs/page
+       INTEGER VDID,WDID           !id's for display and window
+       INTEGER TRID                !id's for transformations
+       REAL XSIZE,YSIZE            !size of plotting area in centimeters
+       REAL XLNGTH,YLNGTH          !axes length in user units
+       PARAMETER (MAXPLT=4)          
+C
+       COMMON/DSPLAY/XLNGTH,YLNGTH,XSIZE,YSIZE
+       COMMON/ID/VDID,WDID,TRID(0:MAXPLT)
