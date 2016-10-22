@@ -1,0 +1,22 @@
+ 
+ Output from example 1: Bohr Sommerfeld Quantization
+ Energy tolerance = 0.10000E-04   position tolerance = 0.10000E-04
+ number of quadrature points =5000
+ For gamma =   50.00 there are   13 levels:
+ (all quantities are expressed in scaled units)
+ 
+        Level        Energy            Xmin            Xmax
+        -----        ------            ----            ----
+           0        -0.89667         1.07152         1.19740
+           1        -0.71091         1.04479         1.27648
+           2        -0.55166         1.03056         1.34998
+           3        -0.41725         1.02122         1.42724
+           4        -0.30592         1.01464         1.51275
+           5        -0.21580         1.00988         1.61089
+           6        -0.14494         1.00642         1.72728
+           7        -0.09127         1.00396         1.87029
+           8        -0.05261         1.00225         2.05364
+           9        -0.02665         1.00112         2.30274
+          10        -0.01098         1.00046         2.67111
+          11        -0.00309         1.00014         3.30132
+          12        -0.00033         1.00003         4.79912
