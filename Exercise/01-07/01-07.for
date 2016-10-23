@@ -53,7 +53,7 @@
       IOut = 11
       IOTmp = 12
 *   CalPar
-      Gmr = 50.0D0
+      Gmr = 200.0D0
 *   Const
       Pi = DACos(-1.0D0)
 *   ErStat
@@ -69,7 +69,7 @@
       DevY = 1.0D-10
 
 *-- File I/O 
-      Open(IOut, File='myemp1.txt')
+      Open(IOut, File='01-07.txt')
 
 *-- I/O Format
 C1000 Format (1x,A50)
@@ -157,10 +157,8 @@ C1030 Format (1x,A50,A10,D15.8)
 *     Result Write In
         IQntV(I+1)  = I
         EngV(I+1)   = RtI
-        ItgLoV(I+1) = ( (DSqrt(1.0D0+RtI)-1.0D0) * 2.0D0 / RtI ) ** 
-     $         (1.0D0 / 6.0D0)
-        ItgUpV(I+1) = ( (-DSqrt(1.0D0+RtI)-1.0D0) * 2.0D0 / RtI ) **
-     $         (1.0D0 / 6.0D0)
+        ItgLoV(I+1) = 1.5D0 - 0.5D0 * Sqrt(1.0D0 + RtI)
+        ItgUpV(I+1) = 1.5D0 + 0.5D0 * Sqrt(1.0D0 + RtI)
 *     Prepare for the next solve
         RtLoI = RtI
         RtUpI = RtI * 1.0D-5
@@ -228,10 +226,8 @@ C1030 Format (1x,A50,A10,D15.8)
 *
 *-----------------------------------------------------------------------
 
-      IntgLo = ( (DSqrt(1.0D0+Eng)-1.0D0) * 2.0D0 / Eng ) ** 
-     $         (1.0D0 / 6.0D0)
-      IntgUp = ( (-DSqrt(1.0D0+Eng)-1.0D0) * 2.0D0 / Eng ) **
-     $         (1.0D0 / 6.0D0)
+      IntgLo = 1.5D0 - 0.5D0 * Sqrt(1.0D0 + Eng)
+      IntgUp = 1.5D0 + 0.5D0 * Sqrt(1.0D0 + Eng)
 
       Func1 = Gmr * Itg5P2(Func1C, Eng, IntgLo, IntgUp, IGridN)
 
@@ -261,7 +257,7 @@ C1030 Format (1x,A50,A10,D15.8)
 *
 *-----------------------------------------------------------------------
 
-      Tmp = Eng - 4.0D0 * ( Var**(-12.0D0) - Var**(-6.0D0) )  
+      Tmp = Eng - 4.0D0 * (Var-1.5)**2 + 1  
       Call Test0(Tmp)
       Func1C = DSqrt(Tmp)
 
