@@ -17,8 +17,7 @@
       Integer           I, J
 *   Initial Value and Calculation Range
       Double Precision  tMin, tMax, yMin, pMin
-      Parameter         (tMin = 0.0D0, tMax = 10.0D0, yMin = 1.5D0, 
-     $                  pMin = 0.5D0)
+      Common /InitV/    tMin, tMax, yMin, pMin
 *   Variable Storage
       Double Precision  t(NGrid), y(NGrid), p(NGrid), yExt(NGrid), 
      $                  pExt(NGrid)
@@ -33,6 +32,10 @@
       External          Fdy, Fdp, FyExt, FpExt
 
       Pi = DACos(-1.0D0)
+      tMin = 0.0D0
+      tMax = 10.0D0
+      yMin = 1.5D0
+      pMin = 0.5D0
 
       Open(11, File = '02-05.txt')
  1000 Format(F6.3, 6F14.7)
@@ -210,11 +213,14 @@
 *   Pi
       Double Precision  Pi
       Common /CalPar/   Pi
+*   Initial Value and Calculation Range
+      Double Precision  tMin, tMax, yMin, pMin
+      Common /InitV/    tMin, tMax, yMin, pMin
 
       Double Precision  FyExt, t
  
-      FyExt = 1.5D0 * DCos(2.0D0*Pi * t) - DSin(2.0D0*Pi * t) /
-     $        (4.0D0*Pi)
+      FyExt = yMin * DCos(2.0D0*Pi * t) + pMin * DSin(2.0D0*Pi * t) /
+     $        (2.0D0*Pi)
 
       End Function FyExt
 
@@ -227,10 +233,14 @@
 *   Pi
       Double Precision  Pi
       Common /CalPar/   Pi
+*   Initial Value and Calculation Range
+      Double Precision  tMin, tMax, yMin, pMin
+      Common /InitV/    tMin, tMax, yMin, pMin
 
       Double Precision  FpExt, t
 
-      FpExt = 0.5D0 * DCos(2.0D0*Pi * t) - 3.0D0*Pi * DSin(2.0D0*Pi * t)
+      FpExt = pMin * DCos(2.0D0*Pi * t) - 2.0D0*Pi * DSin(2.0D0*Pi * t)
+     $        * yMin
 
       End Function FpExt
 
